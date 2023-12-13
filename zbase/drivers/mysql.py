@@ -72,10 +72,11 @@ def sa(tx=True,expunge_all=True):
                 result = func(*args, **kw)
                 
                 for s in sessions:
+                    if tx:
+                        s.flush()
                     if expunge_all:
                         s.expunge_all()
                     if tx:
-                        s.flush()
                         s.commit()
                 return result
             except Exception as e:
