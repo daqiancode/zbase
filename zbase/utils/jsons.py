@@ -19,7 +19,7 @@ class ClassJSONEncoder(JSONEncoder):
         if isinstance(o, (set, frozenset)):
             return list(o)
         if hasattr(o, '__dict__'):
-            return o.__dict__
+            return { k:o.__dict__[k] for k in o.__dict__ if not k.startswith('_')}
         return json.loads(json.dumps(o ,default=str))
     
 
