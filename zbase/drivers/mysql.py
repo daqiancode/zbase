@@ -86,7 +86,6 @@ def sa(tx=True,expunge_all=True):
                 raise e
             finally:
                 for s in sessions:
-                    print("close session")
                     s.close()
         return wrapper
     return decorator
