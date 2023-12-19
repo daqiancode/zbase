@@ -41,7 +41,7 @@ class S3Client:
         return key.lstrip('/').strip()
 
 
-    def put(self, key:str, src:str|BinaryIO|bytes, content_type=None)->ObjectWriteResult:
+    def put(self, key:str, src:str|BinaryIO|bytes, content_type=None,num_parallel_uploads=10)->ObjectWriteResult:
         """
         @param src: str|BinaryIO|bytes , str is file path , BinaryIO is file object by open('file','rb') , bytes is file content
         @param content_type: str
@@ -49,12 +49,12 @@ class S3Client:
         """
         key = self.formatKey(key)
         if isinstance(src, str):
-            return self.client.fput_object(self.bucket, key, src, content_type)
+            return self.client.fput_object(self.bucket, key, src, content_type,num_parallel_uploads=num_parallel_uploads)
         if isinstance(src, bytes):
-            return self.client.put_object(self.bucket, key, BytesIO(src),length=len(src), content_type=content_type)
+            return self.client.put_object(self.bucket, key, BytesIO(src),length=len(src), content_type=content_type,num_parallel_uploads=num_parallel_uploads)
         if isinstance(src, BytesIO):
-            return self.client.put_object(self.bucket, key, src,length=bytesIOLen(src), content_type=content_type)
-        return self.client.put_object(self.bucket, key, src, content_type)
+            return self.client.put_object(self.bucket, key, src,length=bytesIOLen(src), content_type=content_type,num_parallel_uploads=num_parallel_uploads)
+        return self.client.put_object(self.bucket, key, src, content_type,num_parallel_uploads=num_parallel_uploads)
     
     def get(self, key:str)->bytes:
         key = self.formatKey(key)
