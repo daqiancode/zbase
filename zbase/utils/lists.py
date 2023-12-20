@@ -24,14 +24,10 @@ def calc_pages(total:int, page_size:int)->int:
     else:
         return total//page_size+1
     
-def groupby(arr:List, partition:Callable[[Any], Any] | str )->Dict[Any, List]:
+def groupby(arr:List, partition:Callable[[Any], Any] )->Dict[Any, List]:
     res = {}
-    is_partition_str = isinstance(partition, str)
     for v in arr:
-        if is_partition_str:
-            k = v.get(partition)
-        else:
-            k = partition(v)
+        k = partition(v)
         if k not in res:
             res[k] = []
         res[k].append(v)
