@@ -1,4 +1,4 @@
-from typing import Iterable,List,List
+from typing import List, Any, Dict, Callable,Iterable
 
 def paging(objs:Iterable,page_size:int)->List:
     if not objs:
@@ -23,3 +23,16 @@ def calc_pages(total:int, page_size:int)->int:
         return total//page_size
     else:
         return total//page_size+1
+    
+def groupby(arr:List, partition:Callable[[Any], Any] | str )->Dict[Any, List]:
+    res = {}
+    is_partition_str = isinstance(partition, str)
+    for v in arr:
+        if is_partition_str:
+            k = v.get(partition)
+        else:
+            k = partition(v)
+        if k not in res:
+            res[k] = []
+        res[k].append(v)
+    return res
