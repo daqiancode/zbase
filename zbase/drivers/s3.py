@@ -74,3 +74,11 @@ class S3Client:
         key = self.formatKey(key)
         return self.client.remove_object(self.bucket, key)
     
+    def exists(self, key:str)->bool:
+        key = self.formatKey(key)
+        try:
+            self.client.stat_object(self.bucket, key)
+            return True
+        except:
+            return False
+    
