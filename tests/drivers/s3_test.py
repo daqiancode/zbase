@@ -5,11 +5,10 @@ from io import BytesIO
 
 
 
-
 class S3ClientTest(unittest.TestCase):
 
     def setUp(self):
-        self.client = S3Client()
+        self.client = S3Client(bucket="test")
         self.client.ensureBucket()
     
     def test_s3_main(self):
@@ -27,7 +26,7 @@ class S3ClientTest(unittest.TestCase):
         srcFile = "tests/drivers/s3_test.py"
         r = self.client.put(srcFile,srcFile , "text/plain")
         self.assertEqual(r.object_name, srcFile)
-
+        self.client.putDir("tests/drivers","tests" ,{"txt":"text/plain"})
 
 if __name__ == '__main__':
     unittest.main()

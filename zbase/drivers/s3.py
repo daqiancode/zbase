@@ -81,4 +81,20 @@ class S3Client:
             return True
         except:
             return False
-    
+        
+    def putDir(self,key:str,src_dir:str,ext_content_types:dict=None,num_parallel_uploads:int=10):
+        """
+        put src_dir/** to key/**, exclude src_dir name
+        """
+        key = self.formatKey(key)
+        for root, dirs, files in os.walk(src_dir):
+            for file in files:
+                file_path = os.path.join(root, file)
+                file_key = os.path.join(key, file_path[len(src_dir)+1:])
+                content_type = None
+                if ext_content_types:
+                    ext = os.path.splitext(file)[1]
+                    if ext:
+                        ext = ext[1:]
+                    content_type = ext_content_types.get(ext)
+                self.put(file_key,file_path,content_type,num_parallel_uploads=num_parallel_uploads)    
