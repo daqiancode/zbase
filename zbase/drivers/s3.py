@@ -95,6 +95,6 @@ class S3Client:
                 if ext_content_types:
                     ext = os.path.splitext(file)[1]
                     if ext:
-                        ext = ext[1:]
+                        ext = ext[1:].lower()
                     content_type = ext_content_types.get(ext)
                 self.put(file_key,file_path,content_type,num_parallel_uploads=num_parallel_uploads)    
