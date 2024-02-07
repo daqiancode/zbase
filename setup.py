@@ -7,12 +7,12 @@ from setuptools import setup, find_packages
 
 # pip install build twine
 # python -m build
-# python -m twine upload --verbose -u uzoice dist/*
+# python -m twine upload --verbose dist/zbase-0.0.4*
 # pip install zbase
 
 setup(
     name='zbase',
-    version='0.0.3',
+    version='0.0.4',
     author="Daqian",
     packages=find_packages(exclude=['tests', 'tests.*','venv']),
     zip_safe=False,

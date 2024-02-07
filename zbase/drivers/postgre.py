@@ -2,14 +2,15 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base
 from urllib.parse import quote_plus
 from ..env import getEnv, getEnvBool, getEnvInt
-from .db import session_injector_factory,Session
+from .db import session_injector_factory ,Session
 
-# need pip install pymysql
+# need pip install psycopg
+# pip install psycopg-binary
 
-def newMysqlEngine(user, password, host, port, db,options="", **kwargs):
+def newPostgreEngine(user, password, host, port, db,options="", **kwargs):
     password = quote_plus(password)
     return create_engine(
-        f"mysql+pymysql://{user}:{password}@{host}:{port}/{db}?{options}",**kwargs)
+        f"postgresql+psycopg://{user}:{password}@{host}:{port}/{db}?{options}",**kwargs)
 
 
 # engine = create_engine(
@@ -17,10 +18,8 @@ def newMysqlEngine(user, password, host, port, db,options="", **kwargs):
 #     echo=getEnvBool("IS_DEV"), echo_pool=getEnvBool("IS_DEV"), pool_recycle=getEnvInt('MYSQL_POOL_RECYCLE', 3600),
 #     pool_pre_ping=True, pool_size=getEnvInt('MYSQL_POOL_SIZE', 100))
 
-mysqlEngineEnv = newMysqlEngine(getEnv('MYSQL_USER', 'root'), getEnv('MYSQL_PASSWORD'), getEnv('MYSQL_HOST', 'localhost'), 
-                       getEnv('MYSQL_PORT', '3306'), getEnv('MYSQL_DB'),getEnv('MYSQL_OPTIONS'), echo=getEnvBool("IS_DEV"), 
-                       echo_pool=getEnvBool("IS_DEV"), pool_recycle=getEnvInt('MYSQL_POOL_RECYCLE', 3600),
-                        pool_pre_ping=True, pool_size=getEnvInt('MYSQL_POOL_SIZE', 100))
+postgreEngineEnv = newPostgreEngine(getEnv('POSTGRE_USER', 'postgres'), getEnv('POSTGRE_PASSWORD'), getEnv('POSTGRE_HOST', 'localhost'), 
+                       getEnv('POSTGRE_PORT', '5432'), getEnv('POSTGRE_DB'), options=getEnv("POSTGRE_OPTIONS"))
 
 Base = declarative_base()
 
@@ -47,11 +46,10 @@ Base = declarative_base()
 #             session.close()
 
 engines = {
-    'mysql': mysqlEngineEnv
+    'postgre': postgreEngineEnv
 }
+postgre_session = session_injector_factory(engines)
 
-sa = session_injector_factory(engines)
-mysql_session = sa
 
 # def sa(tx=True,expunge_all=True):
 #     def decorator(func):
